@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Energo-Suv Nazorat</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6f9;color:#17202a}
+header{background:#1769aa;color:#fff;padding:18px 22px;position:sticky;top:0;z-index:3}
+h1{margin:0;font-size:22px}.wrap{max-width:1200px;margin:auto;padding:18px}
+nav{display:flex;gap:8px;overflow:auto;margin-bottom:16px}button{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:600}
+nav button{background:#fff}.active{background:#1769aa!important;color:#fff}
+.card{background:#fff;border-radius:15px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px #00000010}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #ccd5dd;border-radius:9px;margin-top:5px}
+label{font-size:13px;font-weight:600}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e6ebef;text-align:left;font-size:14px}
+.stat{font-size:26px;font-weight:700}.muted{color:#667}.primary{background:#1769aa;color:#fff}.danger{background:#ffe7e7;color:#a40000}.hidden{display:none}
+.photo{max-width:180px;max-height:150px;border-radius:10px;margin-top:8px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+@media(max-width:650px){.wrap{padding:10px}th,td{font-size:12px;padding:7px}.card{padding:13px}}
+</style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1769aa"></head>
+<body>
+<header><h1>⚡💧 Energo-Suv Nazorat</h1></header>
+<div class="wrap">
+<nav>
+<button class="active" onclick="show('dashboard',this)">📊 Bosh sahifa</button>
+<button onclick="show('objects',this)">🏢 Obyektlar</button>
+<button onclick="show('records',this)">📝 Hisob kiritish</button>
+<button onclick="show('reports',this)">📈 Hisobot</button>
+</nav>
+
+<section id="dashboard">
+<div class="grid">
+<div class="card"><div class="muted">Obyektlar</div><div class="stat" id="sObj">0</div></div>
+<div class="card"><div class="muted">Elektr sarfi</div><div class="stat" id="sElec">0</div><small>kVt·soat</small></div>
+<div class="card"><div class="muted">Suv sarfi</div><div class="stat" id="sWater">0</div><small>m³</small></div>
+</div>
+<div class="card"><h3>Oxirgi kiritilgan ma’lumotlar</h3><div id="recent"></div></div>
+</section>
+
+<section id="objects" class="hidden">
+<div class="card"><h2>🏢 Obyekt qo‘shish</h2>
+<form id="objForm"><div class="grid">
+<label>Obyekt nomi*<input id="name" required></label>
+<label>Manzil<input id="address"></label>
+<label>Mas’ul shaxs<input id="person"></label>
+<label>Telefon<input id="phone"></label>
+<label>Elektr hisoblagich №<input id="emeter"></label>
+<label>Suv hisoblagich №<input id="wmeter"></label>
+</div><br><button class="primary">+ Obyektni saqlash</button></form></div>
+<div class="card"><h2>Obyektlar ro‘yxati</h2><div id="objectTable"></div></div>
+</section>
+
+<section id="records" class="hidden">
+<div class="card"><h2>📝 Oylik hisob kiritish</h2>
+<form id="recForm"><div class="grid">
+<label>Obyekt*<select id="rObj" required></select></label>
+<label>Oy*<input id="rMonth" type="month" required></label></div>
+<h3>⚡ Elektr energiyasi</h3><div class="grid">
+<label>Boshlang‘ich<input id="eb" type="number" step="0.01"></label><label>Yakuniy<input id="ee" type="number" step="0.01"></label><label>Tarif<input id="et" type="number" step="0.0001" placeholder="so‘m/kVt·soat"></label><label>Rasm<input id="ep" type="file" accept="image/*"></label></div>
+<h3>💧 Sovuq suv</h3><div class="grid">
+<label>Boshlang‘ich<input id="cb" type="number" step="0.01"></label><label>Yakuniy<input id="ce" type="number" step="0.01"></label><label>Tarif<input id="ct" type="number" step="0.0001" placeholder="so‘m/m³"></label><label>Rasm<input id="cp" type="file" accept="image/*"></label></div>
+<h3>🔥 Issiq suv</h3><div class="grid">
+<label>Boshlang‘ich<input id="hb" type="number" step="0.01"></label><label>Yakuniy<input id="he" type="number" step="0.01"></label><label>Tarif<input id="ht" type="number" step="0.0001" placeholder="so‘m/m³"></label><label>Rasm<input id="hp" type="file" accept="image/*"></label></div>
+<h3>♨️ Atapleniya</h3><div class="grid">
+<label>Boshlang‘ich<input id="ab" type="number" step="0.01"></label><label>Yakuniy<input id="ae" type="number" step="0.01"></label><label>Tarif<input id="at" type="number" step="0.0001" placeholder="so‘m/Gkal"></label><label>Rasm<input id="ap" type="file" accept="image/*"></label></div>
+<label>Izoh<textarea id="note"></textarea></label><br><button class="primary">💾 Saqlash</button></form></div>
+<div class="card"><h2>Kiritilgan ma’lumotlar</h2><div id="recordTable"></div></div>
+</section>
+
+<section id="reports" class="hidden">
+<div class="card"><h2>📈 Hisobot</h2><div class="grid">
+<label>Yil<input id="ryear" type="number"></label><label>Oy (ixtiyoriy)<select id="rmon"><option value="">Barchasi</option></select></label>
+</div><br><button class="primary" onclick="makeReport()">Hisobotni ko‘rsatish</button>
+<button onclick="downloadCSV()">Excel uchun CSV yuklash</button>
+<div id="reportOut" style="margin-top:15px"></div></div>
+</section>
+</div>
+<script>
+const KEY='esn_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"objects":[],"records":[]}');
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(db));refresh()}
+function show(id,btn){document.querySelectorAll('section').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');refresh()}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function fileData(f){return new Promise(res=>{if(!f)return res('');let r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)})}
+$('objForm').onsubmit=e=>{e.preventDefault();db.objects.push({id:Date.now(),name:$('name').value,address:$('address').value,person:$('person').value,phone:$('phone').value,emeter:$('emeter').value,wmeter:$('wmeter').value});e.target.reset();save();alert('Obyekt saqlandi')}
+$('recForm').onsubmit=async e=>{
+e.preventDefault();let r={id:Date.now(),obj:+$('rObj').value,month:$('rMonth').value,
+eb:+$('eb').value||0,ee:+$('ee').value||0,et:+$('et').value||0,
+cb:+$('cb').value||0,ce:+$('ce').value||0,ct:+$('ct').value||0,
+hb:+$('hb').value||0,he:+$('he').value||0,ht:+$('ht').value||0,
+ab:+$('ab').value||0,ae:+$('ae').value||0,at:+$('at').value||0,note:$('note').value};
+r.ec=Math.max(0,r.ee-r.eb);r.es=r.ec*r.et;r.cc=Math.max(0,r.ce-r.cb);r.cs=r.cc*r.ct;r.hc=Math.max(0,r.he-r.hb);r.hs=r.hc*r.ht;r.ac=Math.max(0,r.ae-r.ab);r.as=r.ac*r.at;
+r.ep=await fileData($('ep').files[0]);r.cp=await fileData($('cp').files[0]);r.hp=await fileData($('hp').files[0]);r.ap=await fileData($('ap').files[0]);
+db.records.push(r);e.target.reset();save();alert('Hisob saqlandi')}
+function refresh(){
+$('sObj').textContent=db.objects.length;$('sElec').textContent=db.records.reduce((a,r)=>a+r.ec,0).toFixed(2);$('sWater').textContent=db.records.reduce((a,r)=>a+r.cc+r.hc,0).toFixed(2);
+$('rObj').innerHTML=db.objects.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('');
+$('objectTable').innerHTML=db.objects.length?'<table><tr><th>Obyekt</th><th>Manzil</th><th>Mas’ul</th><th>Elektr №</th><th>Suv №</th><th></th></tr>'+db.objects.map(o=>`<tr><td>${esc(o.name)}</td><td>${esc(o.address)}</td><td>${esc(o.person)}</td><td>${esc(o.emeter)}</td><td>${esc(o.wmeter)}</td><td><button class="danger" onclick="delObj(${o.id})">O‘chirish</button></td></tr>`).join('')+'</table>':'<p class="muted">Hali obyekt kiritilmagan.</p>';
+$('recordTable').innerHTML=db.records.length?'<table><tr><th>Obyekt</th><th>Oy</th><th>Elektr</th><th>Sovuq suv</th><th>Issiq suv</th><th>Atapleniya</th><th></th></tr>'+db.records.slice().reverse().map(r=>{let o=db.objects.find(x=>x.id===r.obj)||{};return `<tr><td>${esc(o.name)}</td><td>${r.month}</td><td>${r.ec.toFixed(2)}</td><td>${r.cc.toFixed(2)}</td><td>${r.hc.toFixed(2)}</td><td>${r.ac.toFixed(2)}</td><td><button class="danger" onclick="delRec(${r.id})">O‘chirish</button></td></tr>`}).join('')+'</table>':'<p class="muted">Hali hisob kiritilmagan.</p>';
+let years=[...new Set(db.records.map(r=>r.month.slice(0,4)))].sort();$('ryear').value=new Date().getFullYear();$('rmon').innerHTML='<option value="">Barchasi</option>'+Array.from({length:12},(_,i)=>`<option value="${String(i+1).padStart(2,'0')}">${i+1}-oy</option>`).join('');
+$('recent').innerHTML=db.records.slice(-5).reverse().map(r=>{let o=db.objects.find(x=>x.id===r.obj)||{};return `<p><b>${esc(o.name)}</b> — ${r.month}: ⚡ ${r.ec.toFixed(2)} kVt·soat, 💧 ${r.cc.toFixed(2)} m³</p>`}).join('')||'<p class="muted">Ma’lumot yo‘q.</p>';
+}
+function delObj(id){if(confirm('Obyekt va unga tegishli hisoblarni o‘chirasizmi?')){db.objects=db.objects.filter(o=>o.id!==id);db.records=db.records.filter(r=>r.obj!==id);save()}}
+function delRec(id){if(confirm('Hisobni o‘chirasizmi?')){db.records=db.records.filter(r=>r.id!==id);save()}}
+function makeReport(){let y=$('ryear').value,m=$('rmon').value,rs=db.records.filter(r=>r.month.startsWith(y+(m?'-'+m:'')));let ec=rs.reduce((a,r)=>a+r.ec,0),cc=rs.reduce((a,r)=>a+r.cc,0),hc=rs.reduce((a,r)=>a+r.hc,0),ac=rs.reduce((a,r)=>a+r.ac,0);$('reportOut').innerHTML=`<div class="grid"><div class="card"><b>⚡ Elektr</b><div class="stat">${ec.toFixed(2)}</div>kVt·soat</div><div class="card"><b>💧 Sovuq suv</b><div class="stat">${cc.toFixed(2)}</div>m³</div><div class="card"><b>🔥 Issiq suv</b><div class="stat">${hc.toFixed(2)}</div>m³</div><div class="card"><b>♨️ Atapleniya</b><div class="stat">${ac.toFixed(2)}</div>Gkal</div></div>`}
+function downloadCSV(){let rows=[['Obyekt','Oy','Elektr sarfi','Elektr summa','Sovuq suv','Sovuq summa','Issiq suv','Issiq summa','Atapleniya','Atapleniya summa']];db.records.forEach(r=>{let o=db.objects.find(x=>x.id===r.obj)||{};rows.push([o.name,r.month,r.ec,r.es,r.cc,r.cs,r.hc,r.hs,r.ac,r.as])});let csv=rows.map(x=>x.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');let aa=document.createElement('a');aa.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));aa.download='energo_suv_hisobot.csv';aa.click()}
+</script><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script></body></html>
