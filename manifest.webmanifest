@@ -1,17 +1,1 @@
-{
-  "name": "Energo-Suv Nazorat",
-  "short_name": "Energo-Suv",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#F3F6F9",
-  "theme_color": "#1769AA",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ],
-  "id": "energo-suv-nazorat",
-  "description": "Energo-Suv Nazorat — elektr energiyasi va suv sarfini hisobga olish, nazorat qilish va hisobot yuritish ilovasi."
+{"name": "Energo-Suv Nazorat", "short_name": "Energo-Suv", "start_url": "./", "display": "standalone", "background_color": "#f3f6f9", "theme_color": "#1769aa", "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}]}
